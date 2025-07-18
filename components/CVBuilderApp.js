@@ -255,43 +255,157 @@ const CVBuilderApp = () => {
     try {
       addNotification('Generating PDF...', 'info');
       
-      // Prepare the data for PDF generation
-      const pdfData = {
-        personal: cvData.personal,
-        experience: cvData.experience,
-        education: cvData.education,
-        skills: cvData.skills,
-        achievements: cvData.achievements,
-        targetRole: targetRole
+      // Dynamically import jsPDF
+      const { jsPDF } = await import('jspdf');
+      
+      const doc = new jsPDF();
+      
+      // Set up styling
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 20;
+      const contentWidth = pageWidth - (margin * 2);
+      let yPosition = margin;
+      
+      // Helper function to add text with word wrapping
+      const addWrappedText = (text, fontSize, isBold = false, color = '#000000') => {
+        if (!text) return;
+        
+        doc.setFontSize(fontSize);
+        doc.setFont('helvetica', isBold ? 'bold' : 'normal');
+        doc.setTextColor(color);
+        
+        const lines = doc.splitTextToSize(text, contentWidth);
+        
+        // Check if we need a new page
+        if (yPosition + (lines.length * fontSize * 0.6) > pageHeight - margin) {
+          doc.addPage();
+          yPosition = margin;
+        }
+        
+        doc.text(lines, margin, yPosition);
+        yPosition += lines.length * fontSize * 0.6 + 5;
       };
-
-      // Call the API endpoint for PDF generation
-      const response = await fetch('/api/generate-pdf', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(pdfData)
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      
+      // Add header section with your brand color
+      doc.setFillColor(0, 89, 148); // #005994
+      doc.rect(0, 0, pageWidth, 50, 'F');
+      
+      doc.setTextColor('#FFFFFF');
+      doc.setFontSize(22);
+      doc.setFont('helvetica', 'bold');
+      doc.text(cvData.personal.name || 'Your Name', margin, 25);
+      
+      // Contact info
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'normal');
+      const contactInfo = [
+        cvData.personal.email && `${cvData.personal.email}`,
+        cvData.personal.phone && `${cvData.personal.phone}`,
+        cvData.personal.location && `${cvData.personal.location}`
+      ].filter(Boolean).join(' • ');
+      
+      if (contactInfo) {
+        doc.text(contactInfo, margin, 40);
       }
-
-      // Get the PDF blob
-      const blob = await response.blob();
       
-      // Create download link
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${cvData.personal.name.replace(/[^a-zA-Z0-9]/g, '_')}_CV.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      yPosition = 70;
       
-      // Clean up
-      window.URL.revokeObjectURL(url);
+      // Professional Summary
+      if (cvData.personal.summary) {
+        doc.setTextColor('#005994');
+        addWrappedText('PROFESSIONAL SUMMARY', 14, true, '#005994');
+        yPosition -= 5;
+        addWrappedText(cvData.personal.summary, 11, false, '#333333');
+        yPosition += 10;
+      }
+      
+      // Work Experience
+      if (cvData.experience.length > 0) {
+        addWrappedText('WORK EXPERIENCE', 14, true, '#005994');
+        yPosition -= 5;
+        
+        cvData.experience.forEach((exp, index) => {
+          if (index > 0) yPosition += 5;
+          
+          // Job title and company
+          const jobTitle = `${exp.title || 'Job Title'} • ${exp.company || 'Company'}`;
+          addWrappedText(jobTitle, 12, true, '#000000');
+          yPosition -= 5;
+          
+          // Duration
+          if (exp.duration) {
+            addWrappedText(exp.duration, 10, false, '#666666');
+            yPosition -= 5;
+          }
+          
+          // Description
+          if (exp.description) {
+            addWrappedText(exp.description, 10, false, '#333333');
+          }
+        });
+        yPosition += 10;
+      }
+      
+      // Education
+      if (cvData.education.length > 0) {
+        addWrappedText('EDUCATION', 14, true, '#005994');
+        yPosition -= 5;
+        
+        cvData.education.forEach((edu, index) => {
+          if (index > 0) yPosition += 5;
+          
+          const degree = `${edu.degree || 'Degree'} • ${edu.institution || 'Institution'}`;
+          addWrappedText(degree, 12, true, '#000000');
+          yPosition -= 5;
+          
+          if (edu.year) {
+            addWrappedText(edu.year, 10, false, '#666666');
+            yPosition -= 5;
+          }
+          
+          if (edu.details) {
+            addWrappedText(edu.details, 10, false, '#333333');
+          }
+        });
+        yPosition += 10;
+      }
+      
+      // Skills
+      if (cvData.skills.length > 0) {
+        addWrappedText('SKILLS', 14, true, '#005994');
+        yPosition -= 5;
+        
+        const skillsList = cvData.skills.map(skill => 
+          `${skill.name || 'Skill'} (${skill.level || 'Level'})`
+        ).join(' • ');
+        
+        addWrappedText(skillsList, 11, false, '#333333');
+        yPosition += 10;
+      }
+      
+      // Achievements
+      if (cvData.achievements.length > 0) {
+        addWrappedText('ACHIEVEMENTS', 14, true, '#005994');
+        yPosition -= 5;
+        
+        cvData.achievements.forEach((achievement, index) => {
+          if (index > 0) yPosition += 5;
+          
+          if (achievement.title) {
+            addWrappedText(achievement.title, 12, true, '#000000');
+            yPosition -= 5;
+          }
+          
+          if (achievement.description) {
+            addWrappedText(achievement.description, 10, false, '#333333');
+          }
+        });
+      }
+      
+      // Save the PDF
+      const fileName = `${cvData.personal.name.replace(/[^a-zA-Z0-9]/g, '_') || 'CV'}.pdf`;
+      doc.save(fileName);
       
       addNotification('PDF downloaded successfully!', 'success');
       
