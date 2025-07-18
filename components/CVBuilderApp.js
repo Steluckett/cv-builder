@@ -474,7 +474,7 @@ const CVBuilderApp = () => {
           onChange={(e) => setTargetRole(e.target.value)}
           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
           style={{ focusRingColor: '#005994' }}
-          placeholder="e.g., Senior Software Engineer, Marketing Manager"
+          placeholder="e.g., Senior Nurse, Practice Manager, Clinical Lead"
         />
       </div>
 
@@ -487,7 +487,7 @@ const CVBuilderApp = () => {
             onChange={(e) => updatePersonalInfo('name', e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
             style={{ focusRingColor: '#005994' }}
-            placeholder="John Smith"
+            placeholder="Dr Sarah Johnson"
           />
         </div>
         <div>
@@ -498,7 +498,7 @@ const CVBuilderApp = () => {
             onChange={(e) => updatePersonalInfo('email', e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
             style={{ focusRingColor: '#005994' }}
-            placeholder="john@example.com"
+            placeholder="sarah.johnson@nhs.net"
           />
         </div>
         <div>
@@ -577,7 +577,7 @@ const CVBuilderApp = () => {
                 onChange={(e) => updateExperience(exp.id, 'title', e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
                 style={{ focusRingColor: '#005994' }}
-                placeholder="Software Engineer"
+                placeholder="Senior Staff Nurse"
               />
             </div>
             <div>
@@ -588,7 +588,7 @@ const CVBuilderApp = () => {
                 onChange={(e) => updateExperience(exp.id, 'company', e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
                 style={{ focusRingColor: '#005994' }}
-                placeholder="Tech Solutions Ltd"
+                placeholder="Royal Manchester Hospital"
               />
             </div>
           </div>
@@ -613,9 +613,9 @@ const CVBuilderApp = () => {
               rows={3}
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
               style={{ focusRingColor: '#005994' }}
-              placeholder="• Achieved X by implementing Y, resulting in Z% improvement
-• Led a team of N people to deliver project on time and under budget
-• Collaborated with cross-functional teams to..."
+              placeholder="• Provided high-quality patient care to 20+ patients daily
+• Led medication administration training for 5 junior nurses
+• Collaborated with multidisciplinary teams to improve patient outcomes"
             />
           </div>
 
@@ -658,14 +658,14 @@ const CVBuilderApp = () => {
         <div key={edu.id} className="border border-gray-200 rounded-lg p-4 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Degree</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Qualification</label>
               <input
                 type="text"
                 value={edu.degree}
                 onChange={(e) => updateEducation(edu.id, 'degree', e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
                 style={{ focusRingColor: '#005994' }}
-                placeholder="BSc Computer Science"
+                placeholder="BSc Nursing (Adult)"
               />
             </div>
             <div>
@@ -676,7 +676,7 @@ const CVBuilderApp = () => {
                 onChange={(e) => updateEducation(edu.id, 'institution', e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
                 style={{ focusRingColor: '#005994' }}
-                placeholder="University of Manchester"
+                placeholder="University of Manchester Faculty of Health"
               />
             </div>
           </div>
@@ -701,7 +701,7 @@ const CVBuilderApp = () => {
               rows={2}
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
               style={{ focusRingColor: '#005994' }}
-              placeholder="First Class Honours, Relevant Modules: Machine Learning, Database Systems..."
+              placeholder="First Class Honours, Relevant Modules: Adult Health, Mental Health, Pharmacology..."
             />
           </div>
 
@@ -751,7 +751,7 @@ const CVBuilderApp = () => {
                 onChange={(e) => updateSkill(skill.id, 'name', e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
                 style={{ focusRingColor: '#005994' }}
-                placeholder="JavaScript, Project Management, Data Analysis..."
+                placeholder="Patient Care, Medication Administration, Clinical Assessment..."
               />
             </div>
             <div>
@@ -815,7 +815,7 @@ const CVBuilderApp = () => {
               onChange={(e) => updateAchievement(achievement.id, 'title', e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
               style={{ focusRingColor: '#005994' }}
-              placeholder="Increased sales by 150% in Q4 2023"
+              placeholder="Improved patient satisfaction scores by 25% in stroke unit"
             />
           </div>
 
