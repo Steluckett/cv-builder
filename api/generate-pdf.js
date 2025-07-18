@@ -1,5 +1,5 @@
-// api/generate-pdf.js
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
+import chromium from '@sparticuz/chromium';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { personal, experience, education, skills, achievements, targetRole } = req.body;
+    const { personal, experience, education, skills, achievements } = req.body;
 
     // Validate required data
     if (!personal || !personal.name) {
@@ -231,14 +231,16 @@ export default async function handler(req, res) {
       </html>
     `;
 
-    // Launch Puppeteer
+    // Launch Puppeteer with Vercel-optimized settings
     const browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
     });
 
     const page = await browser.newPage();
-    await page.setContent(htmlContent);
+    await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
 
     // Generate PDF
     const pdf = await page.pdf({
