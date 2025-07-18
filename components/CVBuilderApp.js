@@ -978,29 +978,31 @@ const CVBuilderApp = () => {
                     AI Suggestions
                   </h2>
                   
-                  {suggestions ? (
-                    <div className="prose prose-sm max-w-none">
-                      <div className="whitespace-pre-wrap text-gray-700 text-sm leading-relaxed">
-                        {suggestions}
+                  <div className="h-80 overflow-y-auto">
+                    {suggestions ? (
+                      <div className="prose prose-sm max-w-none">
+                        <div className="whitespace-pre-wrap text-gray-700 text-sm leading-relaxed">
+                          {suggestions}
+                        </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="text-gray-500 text-sm">
-                      <p className="mb-3">Get personalised AI suggestions to improve your CV.</p>
-                      <p className="text-xs mb-2">Make sure to:</p>
-                      <ul className="text-xs space-y-1 mb-4">
-                        <li>• Specify your target role</li>
-                        <li>• Fill in your basic information</li>
-                        <li>• Add at least one experience</li>
-                        <li>• Click "Get AI Suggestions"</li>
-                      </ul>
-                      <div className="rounded-lg p-3" style={{ backgroundColor: '#E6F3FF' }}>
-                        <p className="text-xs" style={{ color: '#003D6B' }}>
-                          💡 AI suggestions update based on your current section and overall CV content.
-                        </p>
+                    ) : (
+                      <div className="text-gray-500 text-sm">
+                        <p className="mb-3">Get personalised AI suggestions to improve your CV.</p>
+                        <p className="text-xs mb-2">Make sure to:</p>
+                        <ul className="text-xs space-y-1 mb-4">
+                          <li>• Specify your target role</li>
+                          <li>• Fill in your basic information</li>
+                          <li>• Add at least one experience</li>
+                          <li>• Click "Get AI Suggestions"</li>
+                        </ul>
+                        <div className="rounded-lg p-3" style={{ backgroundColor: '#E6F3FF' }}>
+                          <p className="text-xs" style={{ color: '#003D6B' }}>
+                            💡 AI suggestions update based on your current section and overall CV content.
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
                 
                 {/* Action Buttons */}
