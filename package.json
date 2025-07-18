@@ -15,7 +15,7 @@
   "react-dom": "^18.2.0",
   "lucide-react": "^0.263.1",
   "openai": "^4.28.0",
-  "playwright-aws-lambda": "^0.10.0"
+  "jspdf": "^2.5.1"
 },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
