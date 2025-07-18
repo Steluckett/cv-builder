@@ -1,9 +1,4 @@
-const updatePersonalInfo = (field, value) => {
-    setCvData(prev => ({
-      ...prev,
-      personal: { ...prev.personal, [field]: value }
-    }));
-  };import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { User, Briefcase, GraduationCap, Award, FileText, Download, Sparkles, ChevronLeft, ChevronRight, X, CheckCircle, AlertCircle, Info } from 'lucide-react';
 
 const CVBuilderApp = () => {
@@ -54,6 +49,14 @@ const CVBuilderApp = () => {
     { id: 'skills', label: 'Skills', icon: Award, title: 'Skills' },
     { id: 'achievements', label: 'Achievements', icon: FileText, title: 'Achievements' }
   ];
+
+  // Move updatePersonalInfo AFTER useState hooks
+  const updatePersonalInfo = (field, value) => {
+    setCvData(prev => ({
+      ...prev,
+      personal: { ...prev.personal, [field]: value }
+    }));
+  };
 
   const addNotification = (message, type = 'info') => {
     const id = Date.now();
