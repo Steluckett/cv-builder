@@ -47,7 +47,8 @@ const CVBuilderApp = () => {
     { id: 'experience', label: 'Experience', icon: Briefcase, title: 'Work Experience' },
     { id: 'education', label: 'Education', icon: GraduationCap, title: 'Education' },
     { id: 'skills', label: 'Skills', icon: Award, title: 'Skills' },
-    { id: 'achievements', label: 'Achievements', icon: FileText, title: 'Achievements' }
+    { id: 'achievements', label: 'Achievements', icon: FileText, title: 'Achievements' },
+    { id: 'customization', label: 'Customization', icon: Sparkles, title: 'CV Customization' }
   ];
 
   // Move updatePersonalInfo AFTER useState hooks
@@ -565,95 +566,6 @@ const CVBuilderApp = () => {
           placeholder="A brief professional summary highlighting your key qualifications and career objectives..."
         />
       </div>
-
-      {/* Color Customisation Section */}
-      <div className="border-t pt-6">
-        <h3 className="text-lg font-semibold mb-4">CV Colour Customisation</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Header Background</label>
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                value={cvData.colors.headerBackground}
-                onChange={(e) => updateColors('headerBackground', e.target.value)}
-                className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
-              />
-              <input
-                type="text"
-                value={cvData.colors.headerBackground}
-                onChange={(e) => updateColors('headerBackground', e.target.value)}
-                className="flex-1 p-2 border border-gray-300 rounded-lg text-sm"
-                placeholder="#005994"
-              />
-            </div>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Header Text</label>
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                value={cvData.colors.headerText}
-                onChange={(e) => updateColors('headerText', e.target.value)}
-                className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
-              />
-              <input
-                type="text"
-                value={cvData.colors.headerText}
-                onChange={(e) => updateColors('headerText', e.target.value)}
-                className="flex-1 p-2 border border-gray-300 rounded-lg text-sm"
-                placeholder="#FFFFFF"
-              />
-            </div>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Section Titles</label>
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                value={cvData.colors.sectionTitles}
-                onChange={(e) => updateColors('sectionTitles', e.target.value)}
-                className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
-              />
-              <input
-                type="text"
-                value={cvData.colors.sectionTitles}
-                onChange={(e) => updateColors('sectionTitles', e.target.value)}
-                className="flex-1 p-2 border border-gray-300 rounded-lg text-sm"
-                placeholder="#005994"
-              />
-            </div>
-          </div>
-        </div>
-        
-        {/* Color Preview */}
-        <div className="mt-4 p-4 border rounded-lg">
-          <h4 className="text-sm font-medium text-gray-700 mb-2">Preview:</h4>
-          <div 
-            className="p-4 rounded-lg text-center"
-            style={{ 
-              backgroundColor: cvData.colors.headerBackground,
-              color: cvData.colors.headerText 
-            }}
-          >
-            <div className="font-bold text-lg">{cvData.personal.name || 'Your Name'}</div>
-            <div className="text-sm opacity-90">Header Preview</div>
-          </div>
-          <div className="mt-2">
-            <div 
-              className="font-bold text-sm border-b-2 pb-1"
-              style={{ 
-                color: cvData.colors.sectionTitles,
-                borderColor: cvData.colors.sectionTitles 
-              }}
-            >
-              SECTION TITLE PREVIEW
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 
@@ -957,6 +869,95 @@ const CVBuilderApp = () => {
     </div>
   );
 
+  const renderCustomizationSection = () => (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Header Background</label>
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={cvData.colors.headerBackground}
+              onChange={(e) => updateColors('headerBackground', e.target.value)}
+              className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+            />
+            <input
+              type="text"
+              value={cvData.colors.headerBackground}
+              onChange={(e) => updateColors('headerBackground', e.target.value)}
+              className="flex-1 p-2 border border-gray-300 rounded-lg text-sm"
+              placeholder="#005994"
+            />
+          </div>
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Header Text</label>
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={cvData.colors.headerText}
+              onChange={(e) => updateColors('headerText', e.target.value)}
+              className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+            />
+            <input
+              type="text"
+              value={cvData.colors.headerText}
+              onChange={(e) => updateColors('headerText', e.target.value)}
+              className="flex-1 p-2 border border-gray-300 rounded-lg text-sm"
+              placeholder="#FFFFFF"
+            />
+          </div>
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Section Titles</label>
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={cvData.colors.sectionTitles}
+              onChange={(e) => updateColors('sectionTitles', e.target.value)}
+              className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+            />
+            <input
+              type="text"
+              value={cvData.colors.sectionTitles}
+              onChange={(e) => updateColors('sectionTitles', e.target.value)}
+              className="flex-1 p-2 border border-gray-300 rounded-lg text-sm"
+              placeholder="#005994"
+            />
+          </div>
+        </div>
+      </div>
+      
+      {/* Color Preview */}
+      <div className="mt-4 p-4 border rounded-lg">
+        <h4 className="text-sm font-medium text-gray-700 mb-2">Preview:</h4>
+        <div 
+          className="p-4 rounded-lg text-center"
+          style={{ 
+            backgroundColor: cvData.colors.headerBackground,
+            color: cvData.colors.headerText 
+          }}
+        >
+          <div className="font-bold text-lg">{cvData.personal.name || 'Your Name'}</div>
+          <div className="text-sm opacity-90">Header Preview</div>
+        </div>
+        <div className="mt-2">
+          <div 
+            className="font-bold text-sm border-b-2 pb-1"
+            style={{ 
+              color: cvData.colors.sectionTitles,
+              borderColor: cvData.colors.sectionTitles 
+            }}
+          >
+            SECTION TITLE PREVIEW
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   const renderSection = () => {
     switch (activeSection) {
       case 0:
@@ -969,6 +970,8 @@ const CVBuilderApp = () => {
         return renderSkillsSection();
       case 4:
         return renderAchievementsSection();
+      case 5:
+        return renderCustomizationSection();
       default:
         return renderPersonalSection();
     }
@@ -1010,7 +1013,7 @@ const CVBuilderApp = () => {
                       <button
                         key={section.id}
                         onClick={() => goToSection(index)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                        className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors text-sm ${
                           isActive 
                             ? 'text-white' 
                             : isCompleted 
@@ -1020,7 +1023,7 @@ const CVBuilderApp = () => {
                         style={isActive ? { backgroundColor: '#005994' } : isCompleted ? { backgroundColor: '#BFD12F' } : {}}
                       >
                         <Icon className="w-4 h-4" />
-                        <span className="hidden sm:inline">{section.label}</span>
+                        <span className="hidden sm:inline text-sm">{section.label}</span>
                       </button>
                     );
                   })}
@@ -1079,13 +1082,13 @@ const CVBuilderApp = () => {
 
               {/* Right Column - AI Suggestions */}
               <div className="w-1/3 space-y-4">
-                <div className="bg-white rounded-lg shadow-sm border p-6 sticky top-8">
-                  <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <div className="bg-white rounded-lg shadow-sm border p-6 sticky top-8 flex flex-col max-h-[calc(100vh-4rem)]">
+                  <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 flex-shrink-0">
                     <Sparkles className="w-5 h-5" style={{ color: '#682E57' }} />
                     AI Suggestions
                   </h2>
                   
-                  <div className="h-80 overflow-y-auto">
+                  <div className="flex-1 overflow-y-auto mb-4 min-h-0">
                     {suggestions ? (
                       <div className="prose prose-sm max-w-none">
                         <div className="whitespace-pre-wrap text-gray-700 text-sm leading-relaxed">
@@ -1110,27 +1113,27 @@ const CVBuilderApp = () => {
                       </div>
                     )}
                   </div>
-                </div>
                 
-                {/* Action Buttons */}
-                <div className="space-y-3">
-                  <button
-                    onClick={generateAISuggestions}
-                    disabled={isGenerating}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-3 text-white rounded-lg hover:opacity-90 disabled:opacity-50"
-                    style={{ backgroundColor: '#682E57' }}
-                  >
-                    <Sparkles className="w-5 h-5" />
-                    {isGenerating ? 'Generating...' : 'Get AI Suggestions'}
-                  </button>
-                  <button
-                    onClick={generatePDF}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-3 text-white rounded-lg hover:opacity-90"
-                    style={{ backgroundColor: '#BFD12F' }}
-                  >
-                    <Download className="w-5 h-5" />
-                    Download CV
-                  </button>
+                  {/* Action Buttons - Always visible at bottom */}
+                  <div className="space-y-3 flex-shrink-0">
+                    <button
+                      onClick={generateAISuggestions}
+                      disabled={isGenerating}
+                      className="w-full flex items-center justify-center gap-2 px-6 py-3 text-white rounded-lg hover:opacity-90 disabled:opacity-50"
+                      style={{ backgroundColor: '#682E57' }}
+                    >
+                      <Sparkles className="w-5 h-5" />
+                      {isGenerating ? 'Generating...' : 'Get AI Suggestions'}
+                    </button>
+                    <button
+                      onClick={generatePDF}
+                      className="w-full flex items-center justify-center gap-2 px-6 py-3 text-white rounded-lg hover:opacity-90"
+                      style={{ backgroundColor: '#BFD12F' }}
+                    >
+                      <Download className="w-5 h-5" />
+                      Download CV
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
