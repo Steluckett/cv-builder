@@ -1082,7 +1082,7 @@ const CVBuilderApp = () => {
 
               {/* Right Column - AI Suggestions */}
               <div className="w-1/3 space-y-4">
-                <div className="bg-white rounded-lg shadow-sm border p-6 sticky top-8 flex flex-col max-h-[calc(100vh-4rem)]">
+                <div className="bg-white rounded-lg shadow-sm border p-6 sticky top-8 flex flex-col max-h-[70vh]">
                   <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 flex-shrink-0">
                     <Sparkles className="w-5 h-5" style={{ color: '#682E57' }} />
                     AI Suggestions
