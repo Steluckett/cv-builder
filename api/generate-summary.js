@@ -16,8 +16,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Target role is required' });
     }
 
-    const prompt = `
-Create a compelling professional summary for a ${targetRole} position based on this information:
+    const prompt = `Create a compelling professional summary for a ${targetRole} position based on this information:
 
 Experience: ${JSON.stringify(experience)}
 Education: ${JSON.stringify(education)}
@@ -31,8 +30,7 @@ Write a 3-4 line professional summary that:
 - Uses dynamic action words
 - Sounds professional but engaging
 
-Respond with ONLY the summary text, no additional formatting or explanation.
-    `;
+Respond with ONLY the summary text, no additional formatting or explanation.`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
