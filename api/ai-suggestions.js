@@ -16,8 +16,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Target role is required' });
     }
 
-    const prompt = `
-I'm helping someone create a CV for a ${targetRole} position. Based on their current information, provide specific, actionable suggestions to improve their CV.
+    const prompt = `I'm helping someone create a CV for a ${targetRole} position. Based on their current information, provide specific, actionable suggestions to improve their CV.
 
 Current CV Data:
 - Personal Info: ${JSON.stringify(personal)}
@@ -35,8 +34,7 @@ Please provide:
 4. Ways to better highlight relevant achievements
 5. Overall CV structure and formatting tips
 
-Format your response as clear, actionable bullet points. Be specific and practical.
-    `;
+Format your response as clear, actionable bullet points. Be specific and practical.`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
