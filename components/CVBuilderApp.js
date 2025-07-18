@@ -169,7 +169,6 @@ const CVBuilderApp = () => {
   const generateAISuggestions = async () => {
     if (!targetRole.trim()) {
       addNotification('Please specify a target role to get personalised suggestions.', 'error');
-      setSuggestions('Please specify a target role to get personalised suggestions.');
       return;
     }
 
@@ -178,34 +177,31 @@ const CVBuilderApp = () => {
     addNotification('Generating AI suggestions...', 'info');
 
     try {
-      const prompt = `
-        I'm helping someone create a CV for a ${targetRole} position. Based on their current information, provide specific, actionable suggestions to improve their CV. Here's their current data:
+      const response = await fetch('/api/ai-suggestions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          personal: cvData.personal,
+          experience: cvData.experience,
+          education: cvData.education,
+          skills: cvData.skills,
+          achievements: cvData.achievements,
+          targetRole: targetRole
+        })
+      });
 
-        Personal Info: ${JSON.stringify(cvData.personal)}
-        Experience: ${JSON.stringify(cvData.experience)}
-        Education: ${JSON.stringify(cvData.education)}
-        Skills: ${JSON.stringify(cvData.skills)}
-        Achievements: ${JSON.stringify(cvData.achievements)}
+      if (!response.ok) {
+        throw new Error('Failed to generate suggestions');
+      }
 
-        Target Role: ${targetRole}
-
-        Please provide:
-        1. Specific improvements for their professional summary
-        2. Suggestions for better job descriptions using action verbs and quantifiable results
-        3. Recommended skills to add or emphasise for this role
-        4. Ways to better highlight relevant achievements
-        5. Overall CV structure and formatting tips
-
-        Format your response as clear, actionable bullet points. Be specific and practical.
-      `;
-
-      const response = await window.claude.complete(prompt);
-      setSuggestions(response);
+      const data = await response.json();
+      setSuggestions(data.suggestions);
       addNotification('AI suggestions generated successfully!', 'success');
     } catch (error) {
-      const errorMessage = 'Sorry, I encountered an error whilst generating suggestions. Please try again.';
-      setSuggestions(errorMessage);
-      addNotification(errorMessage, 'error');
+      console.error('Error generating suggestions:', error);
+      addNotification('Sorry, I encountered an error whilst generating suggestions. Please try again.', 'error');
     } finally {
       setIsGenerating(false);
     }
@@ -221,28 +217,29 @@ const CVBuilderApp = () => {
     addNotification('Generating professional summary...', 'info');
 
     try {
-      const prompt = `
-        Create a compelling professional summary for a ${targetRole} position based on this information:
-        
-        Experience: ${JSON.stringify(cvData.experience)}
-        Education: ${JSON.stringify(cvData.education)}
-        Skills: ${JSON.stringify(cvData.skills)}
-        Achievements: ${JSON.stringify(cvData.achievements)}
+      const response = await fetch('/api/generate-summary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          experience: cvData.experience,
+          education: cvData.education,
+          skills: cvData.skills,
+          achievements: cvData.achievements,
+          targetRole: targetRole
+        })
+      });
 
-        Write a 3-4 line professional summary that:
-        - Highlights key qualifications for the ${targetRole} role
-        - Mentions years of experience if applicable
-        - Includes 2-3 most relevant skills or achievements
-        - Uses dynamic action words
-        - Sounds professional but engaging
+      if (!response.ok) {
+        throw new Error('Failed to generate summary');
+      }
 
-        Respond with ONLY the summary text, no additional formatting or explanation.
-      `;
-
-      const response = await window.claude.complete(prompt);
-      updatePersonalInfo('summary', response.trim());
+      const data = await response.json();
+      updatePersonalInfo('summary', data.summary);
       addNotification('Professional summary generated successfully!', 'success');
     } catch (error) {
+      console.error('Error generating summary:', error);
       addNotification('Error generating summary. Please try again.', 'error');
     } finally {
       setIsGenerating(false);
@@ -431,7 +428,8 @@ const CVBuilderApp = () => {
           value={cvData.personal.summary}
           onChange={(e) => updatePersonalInfo('summary', e.target.value)}
           rows={4}
-          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+          style={{ focusRingColor: '#005994' }}
           placeholder="A brief professional summary highlighting your key qualifications and career objectives..."
         />
       </div>
@@ -463,7 +461,8 @@ const CVBuilderApp = () => {
                 type="text"
                 value={exp.title}
                 onChange={(e) => updateExperience(exp.id, 'title', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                style={{ focusRingColor: '#005994' }}
                 placeholder="Software Engineer"
               />
             </div>
@@ -473,7 +472,8 @@ const CVBuilderApp = () => {
                 type="text"
                 value={exp.company}
                 onChange={(e) => updateExperience(exp.id, 'company', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                style={{ focusRingColor: '#005994' }}
                 placeholder="Tech Solutions Ltd"
               />
             </div>
@@ -485,7 +485,8 @@ const CVBuilderApp = () => {
               type="text"
               value={exp.duration}
               onChange={(e) => updateExperience(exp.id, 'duration', e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+              style={{ focusRingColor: '#005994' }}
               placeholder="Jan 2020 - Present"
             />
           </div>
@@ -496,7 +497,8 @@ const CVBuilderApp = () => {
               value={exp.description}
               onChange={(e) => updateExperience(exp.id, 'description', e.target.value)}
               rows={3}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+              style={{ focusRingColor: '#005994' }}
               placeholder="• Achieved X by implementing Y, resulting in Z% improvement
 • Led a team of N people to deliver project on time and under budget
 • Collaborated with cross-functional teams to..."
@@ -547,7 +549,8 @@ const CVBuilderApp = () => {
                 type="text"
                 value={edu.degree}
                 onChange={(e) => updateEducation(edu.id, 'degree', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                style={{ focusRingColor: '#005994' }}
                 placeholder="BSc Computer Science"
               />
             </div>
@@ -557,7 +560,8 @@ const CVBuilderApp = () => {
                 type="text"
                 value={edu.institution}
                 onChange={(e) => updateEducation(edu.id, 'institution', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                style={{ focusRingColor: '#005994' }}
                 placeholder="University of Manchester"
               />
             </div>
@@ -569,7 +573,8 @@ const CVBuilderApp = () => {
               type="text"
               value={edu.year}
               onChange={(e) => updateEducation(edu.id, 'year', e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+              style={{ focusRingColor: '#005994' }}
               placeholder="2020"
             />
           </div>
@@ -580,7 +585,8 @@ const CVBuilderApp = () => {
               value={edu.details}
               onChange={(e) => updateEducation(edu.id, 'details', e.target.value)}
               rows={2}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+              style={{ focusRingColor: '#005994' }}
               placeholder="First Class Honours, Relevant Modules: Machine Learning, Database Systems..."
             />
           </div>
@@ -629,7 +635,8 @@ const CVBuilderApp = () => {
                 type="text"
                 value={skill.name}
                 onChange={(e) => updateSkill(skill.id, 'name', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                style={{ focusRingColor: '#005994' }}
                 placeholder="JavaScript, Project Management, Data Analysis..."
               />
             </div>
@@ -638,7 +645,8 @@ const CVBuilderApp = () => {
               <select
                 value={skill.level}
                 onChange={(e) => updateSkill(skill.id, 'level', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                style={{ focusRingColor: '#005994' }}
               >
                 <option value="Beginner">Beginner</option>
                 <option value="Intermediate">Intermediate</option>
@@ -691,7 +699,8 @@ const CVBuilderApp = () => {
               type="text"
               value={achievement.title}
               onChange={(e) => updateAchievement(achievement.id, 'title', e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+              style={{ focusRingColor: '#005994' }}
               placeholder="Increased sales by 150% in Q4 2023"
             />
           </div>
@@ -702,7 +711,8 @@ const CVBuilderApp = () => {
               value={achievement.description}
               onChange={(e) => updateAchievement(achievement.id, 'description', e.target.value)}
               rows={3}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+              style={{ focusRingColor: '#005994' }}
               placeholder="Detailed description of the achievement, including context, actions taken, and measurable results..."
             />
           </div>
