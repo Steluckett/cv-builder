@@ -1,4 +1,9 @@
-import React, { useState } from 'react';
+const updatePersonalInfo = (field, value) => {
+    setCvData(prev => ({
+      ...prev,
+      personal: { ...prev.personal, [field]: value }
+    }));
+  };import React, { useState } from 'react';
 import { User, Briefcase, GraduationCap, Award, FileText, Download, Sparkles, ChevronLeft, ChevronRight, X, CheckCircle, AlertCircle, Info } from 'lucide-react';
 
 const CVBuilderApp = () => {
@@ -30,7 +35,12 @@ const CVBuilderApp = () => {
     experience: [],
     education: [],
     skills: [],
-    achievements: []
+    achievements: [],
+    colors: {
+      headerBackground: '#005994',
+      headerText: '#FFFFFF',
+      sectionTitles: '#005994'
+    }
   });
   const [isGenerating, setIsGenerating] = useState(false);
   const [suggestions, setSuggestions] = useState('');
@@ -55,10 +65,10 @@ const CVBuilderApp = () => {
     setNotifications(prev => prev.filter(notification => notification.id !== id));
   };
 
-  const updatePersonalInfo = (field, value) => {
+  const updateColors = (field, value) => {
     setCvData(prev => ({
       ...prev,
-      personal: { ...prev.personal, [field]: value }
+      colors: { ...prev.colors, [field]: value }
     }));
   };
 
@@ -287,11 +297,16 @@ const CVBuilderApp = () => {
         yPosition += lines.length * fontSize * 0.6 + 5;
       };
       
-      // Add header section with your brand color
-      doc.setFillColor(0, 89, 148); // #005994
+      // Add header section with custom colors
+      const headerBgColor = cvData.colors.headerBackground.replace('#', '');
+      const headerR = parseInt(headerBgColor.substr(0, 2), 16);
+      const headerG = parseInt(headerBgColor.substr(2, 2), 16);
+      const headerB = parseInt(headerBgColor.substr(4, 2), 16);
+      
+      doc.setFillColor(headerR, headerG, headerB);
       doc.rect(0, 0, pageWidth, 50, 'F');
       
-      doc.setTextColor('#FFFFFF');
+      doc.setTextColor(cvData.colors.headerText);
       doc.setFontSize(22);
       doc.setFont('helvetica', 'bold');
       doc.text(cvData.personal.name || 'Your Name', margin, 25);
@@ -313,8 +328,8 @@ const CVBuilderApp = () => {
       
       // Professional Summary
       if (cvData.personal.summary) {
-        doc.setTextColor('#005994');
-        addWrappedText('PROFESSIONAL SUMMARY', 14, true, '#005994');
+        doc.setTextColor(cvData.colors.sectionTitles);
+        addWrappedText('PROFESSIONAL SUMMARY', 14, true, cvData.colors.sectionTitles);
         yPosition -= 5;
         addWrappedText(cvData.personal.summary, 11, false, '#333333');
         yPosition += 10;
@@ -322,7 +337,7 @@ const CVBuilderApp = () => {
       
       // Work Experience
       if (cvData.experience.length > 0) {
-        addWrappedText('WORK EXPERIENCE', 14, true, '#005994');
+        addWrappedText('WORK EXPERIENCE', 14, true, cvData.colors.sectionTitles);
         yPosition -= 5;
         
         cvData.experience.forEach((exp, index) => {
@@ -349,13 +364,13 @@ const CVBuilderApp = () => {
       
       // Education
       if (cvData.education.length > 0) {
-        addWrappedText('EDUCATION', 14, true, '#005994');
+        addWrappedText('EDUCATION', 14, true, cvData.colors.sectionTitles);
         yPosition -= 5;
         
         cvData.education.forEach((edu, index) => {
           if (index > 0) yPosition += 5;
           
-          const degree = `${edu.degree || 'Degree'} • ${edu.institution || 'Institution'}`;
+          const degree = `${edu.degree || 'Qualification'} • ${edu.institution || 'Institution'}`;
           addWrappedText(degree, 12, true, '#000000');
           yPosition -= 5;
           
@@ -373,7 +388,7 @@ const CVBuilderApp = () => {
       
       // Skills
       if (cvData.skills.length > 0) {
-        addWrappedText('SKILLS', 14, true, '#005994');
+        addWrappedText('SKILLS', 14, true, cvData.colors.sectionTitles);
         yPosition -= 5;
         
         const skillsList = cvData.skills.map(skill => 
@@ -386,7 +401,7 @@ const CVBuilderApp = () => {
       
       // Achievements
       if (cvData.achievements.length > 0) {
-        addWrappedText('ACHIEVEMENTS', 14, true, '#005994');
+        addWrappedText('ACHIEVEMENTS', 14, true, cvData.colors.sectionTitles);
         yPosition -= 5;
         
         cvData.achievements.forEach((achievement, index) => {
@@ -546,6 +561,95 @@ const CVBuilderApp = () => {
           style={{ focusRingColor: '#005994' }}
           placeholder="A brief professional summary highlighting your key qualifications and career objectives..."
         />
+      </div>
+
+      {/* Color Customisation Section */}
+      <div className="border-t pt-6">
+        <h3 className="text-lg font-semibold mb-4">CV Colour Customisation</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Header Background</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="color"
+                value={cvData.colors.headerBackground}
+                onChange={(e) => updateColors('headerBackground', e.target.value)}
+                className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+              />
+              <input
+                type="text"
+                value={cvData.colors.headerBackground}
+                onChange={(e) => updateColors('headerBackground', e.target.value)}
+                className="flex-1 p-2 border border-gray-300 rounded-lg text-sm"
+                placeholder="#005994"
+              />
+            </div>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Header Text</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="color"
+                value={cvData.colors.headerText}
+                onChange={(e) => updateColors('headerText', e.target.value)}
+                className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+              />
+              <input
+                type="text"
+                value={cvData.colors.headerText}
+                onChange={(e) => updateColors('headerText', e.target.value)}
+                className="flex-1 p-2 border border-gray-300 rounded-lg text-sm"
+                placeholder="#FFFFFF"
+              />
+            </div>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Section Titles</label>
+            <div className="flex items-center gap-2">
+              <input
+                type="color"
+                value={cvData.colors.sectionTitles}
+                onChange={(e) => updateColors('sectionTitles', e.target.value)}
+                className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+              />
+              <input
+                type="text"
+                value={cvData.colors.sectionTitles}
+                onChange={(e) => updateColors('sectionTitles', e.target.value)}
+                className="flex-1 p-2 border border-gray-300 rounded-lg text-sm"
+                placeholder="#005994"
+              />
+            </div>
+          </div>
+        </div>
+        
+        {/* Color Preview */}
+        <div className="mt-4 p-4 border rounded-lg">
+          <h4 className="text-sm font-medium text-gray-700 mb-2">Preview:</h4>
+          <div 
+            className="p-4 rounded-lg text-center"
+            style={{ 
+              backgroundColor: cvData.colors.headerBackground,
+              color: cvData.colors.headerText 
+            }}
+          >
+            <div className="font-bold text-lg">{cvData.personal.name || 'Your Name'}</div>
+            <div className="text-sm opacity-90">Header Preview</div>
+          </div>
+          <div className="mt-2">
+            <div 
+              className="font-bold text-sm border-b-2 pb-1"
+              style={{ 
+                color: cvData.colors.sectionTitles,
+                borderColor: cvData.colors.sectionTitles 
+              }}
+            >
+              SECTION TITLE PREVIEW
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
