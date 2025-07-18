@@ -16,7 +16,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Target role is required' });
     }
 
-    const prompt = `I'm helping someone create a CV for a ${targetRole} position. Based on their current information, provide specific, actionable suggestions to improve their CV.
+    const prompt = `I'm helping someone create a CV for a ${targetRole} position in the UK healthcare sector. Based on their current information, provide specific, actionable suggestions to improve their CV using UK English throughout.
 
 Current CV Data:
 - Personal Info: ${JSON.stringify(personal)}
@@ -27,21 +27,20 @@ Current CV Data:
 
 Target Role: ${targetRole}
 
-Please provide:
+Please provide specific, UK healthcare-focused suggestions for:
 1. Specific improvements for their professional summary
-2. Suggestions for better job descriptions using action verbs and quantifiable results
-3. Recommended skills to add or emphasize for this role
-4. Ways to better highlight relevant achievements
-5. Overall CV structure and formatting tips
+2. Suggestions for better job descriptions using action verbs and quantifiable results relevant to healthcare
+3. Recommended skills to add or emphasise for this healthcare role
+4. Ways to better highlight relevant achievements in healthcare
 
-Format your response as clear, actionable bullet points. Be specific and practical.`;
+Use UK English spelling throughout (e.g., "emphasise" not "emphasize", "organised" not "organized", "centre" not "center"). Focus on healthcare terminology and examples. Format your response as clear, actionable bullet points. Be specific and practical for UK healthcare professionals.`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
-          content: "You are an expert CV/resume writer and career coach. Provide specific, actionable advice to help people improve their CVs for their target roles."
+          content: "You are an expert CV writer specialising in UK healthcare recruitment. You understand NHS structures, healthcare terminology, and UK professional standards. Use UK English spelling and healthcare-specific examples throughout. Provide specific, actionable advice for healthcare professionals."
         },
         {
           role: "user",
